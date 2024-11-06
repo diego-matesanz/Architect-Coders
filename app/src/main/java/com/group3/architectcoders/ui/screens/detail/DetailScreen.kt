@@ -47,6 +47,7 @@ import com.group3.architectcoders.data.Book
 import com.group3.architectcoders.ui.common.CustomAsyncImage
 import com.group3.architectcoders.ui.common.HtmlText
 import com.group3.architectcoders.ui.screens.Screen
+import com.group3.architectcoders.ui.screens.common.BookmarkIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -101,10 +102,7 @@ fun DetailScreen(
                                 .align(Alignment.BottomEnd)
                                 .padding(32.dp),
                         ) {
-                            Icon(
-                                imageVector = if (bookSaved) Icons.Filled.BookmarkAdded else Icons.Outlined.BookmarkAdd,
-                                contentDescription = stringResource(id = R.string.bookmark),
-                            )
+                            BookmarkIcon(bookSaved)
                         }
                     }
                 }

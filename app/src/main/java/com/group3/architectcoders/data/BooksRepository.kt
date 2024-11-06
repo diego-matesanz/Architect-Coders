@@ -27,16 +27,3 @@ class BooksRepository {
             .first()
             .toDomainModel()
 }
-
-private fun RemoteBook.toDomainModel(): Book =
-    Book(
-        id = id ?: "",
-        title = volumeInfo?.title ?: "",
-        authors = volumeInfo?.authors ?: emptyList(),
-        coverImage = volumeInfo?.imageLinks?.thumbnail?.toHttps() ?: "",
-        pageCount = volumeInfo?.pageCount ?: 0,
-        description = volumeInfo?.description ?: "",
-        language = volumeInfo?.language?.toUpperCase(Locale.current) ?: "",
-        averageRating = volumeInfo?.averageRating ?: 0.0,
-        ratingsCount = volumeInfo?.ratingsCount ?: 0
-    )
