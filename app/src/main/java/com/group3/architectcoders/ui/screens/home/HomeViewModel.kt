@@ -9,12 +9,10 @@ import com.group3.architectcoders.data.Book
 import com.group3.architectcoders.data.BooksRepository
 import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(private val repository: BooksRepository) : ViewModel() {
 
     var state by mutableStateOf(UiState())
         private set
-
-    private val repository = BooksRepository()
 
     fun fetchBooksBySearch(search: String) {
         viewModelScope.launch {
