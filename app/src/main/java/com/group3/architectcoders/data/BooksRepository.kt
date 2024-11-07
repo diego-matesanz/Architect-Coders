@@ -11,24 +11,21 @@ interface BooksRepository {
     suspend fun fetchBookByIsbn(isbn: String): Book
 }
 
-class BooksRepositoryImpl : BooksRepository {
+class BooksRepositoryImpl(private val service: BooksService) : BooksRepository {
 
     override suspend fun fetchBooksBySearchText(search: String): List<Book> =
-        BooksClient
-            .instance
+        service
             .fetchBooksBySearchText(search)
             .items
             .map { it.toDomainModel() }
 
     override suspend fun fetchBookById(id: String): Book =
-        BooksClient
-            .instance
+        service
             .fetchBookById(id)
             .toDomainModel()
 
     override suspend fun fetchBookByIsbn(isbn: String): Book =
-        BooksClient
-            .instance
+        service
             .fetchBooksBySearchText("isbn:$isbn")
             .items
             .first()

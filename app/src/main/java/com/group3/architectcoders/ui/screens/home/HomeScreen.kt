@@ -64,7 +64,7 @@ fun HomeScreen(
     onBookClick: (Book) -> Unit,
     onCamClick: () -> Unit,
     onBookmarked: (Book) -> Unit,
-    viewModel: HomeViewModel = viewModel(),
+    viewModel: HomeViewModel,
 ) {
     val state = viewModel.state
 

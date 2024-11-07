@@ -19,12 +19,13 @@ object BooksClient {
         ignoreUnknownKeys = true
     }
 
-    val instance = Retrofit.Builder()
-        .baseUrl("https://www.googleapis.com/books/v1/")
-        .client(okHttpClient)
-        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-        .build()
-        .create<BooksService>()
+    fun getBooksService(): BooksService =
+        Retrofit.Builder()
+            .baseUrl("https://www.googleapis.com/books/v1/")
+            .client(okHttpClient)
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .build()
+            .create<BooksService>()
 }
 
 private fun apiKeyAsQuery(chain: Interceptor.Chain) = chain.proceed(
