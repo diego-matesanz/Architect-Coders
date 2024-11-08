@@ -51,18 +51,14 @@ import com.group3.architectcoders.ui.screens.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(
-    viewModel: DetailViewModel,
-    onBack: () -> Unit,
-    onBookmarked: (Book) -> Unit,
-) {
-    val state = viewModel.state
+fun DetailScreen(controller: DetailController) {
+    val state = controller.viewModel.state
 
     Screen {
         Scaffold(
             topBar = {
                 DetailTopBar(
-                    onBack = onBack,
+                    onBack = controller::onBack,
                     dominantColor = if (state.dominantColor != 0)
                         Color(state.dominantColor) else Color.Transparent
                 )
@@ -70,8 +66,8 @@ fun DetailScreen(
         ) { padding ->
             DetailContent(
                 state = state,
-                onDominantColor = viewModel::onDominantColor,
-                onBookmarked = onBookmarked,
+                onDominantColor = controller::onDominantColor,
+                onBookmarked = controller::onBookmarked,
                 modifier = Modifier.padding(padding),
             )
         }

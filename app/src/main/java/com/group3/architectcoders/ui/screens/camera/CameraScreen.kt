@@ -39,7 +39,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.group3.architectcoders.R
 import com.group3.architectcoders.data.Book
 import com.group3.architectcoders.ui.common.CustomAsyncImage
@@ -50,26 +49,22 @@ import com.journeyapps.barcodescanner.CompoundBarcodeView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CameraScreen(
-    onBack: () -> Unit,
-    onBookClick: (Book) -> Unit,
-    viewModel: CameraViewModel = viewModel(),
-) {
-    val state = viewModel.state
+fun CameraScreen(controller: CameraController) {
+    val state = controller.viewModel.state
     var permissionGranted by remember { mutableStateOf(false) }
 
     PermissionRequestEffect(permission = Manifest.permission.CAMERA) { permissionGranted = it }
 
     Screen {
         Scaffold(
-            topBar = { CameraTopBar(onBack = onBack) },
+            topBar = { CameraTopBar(onBack = controller::onBack) },
             contentWindowInsets = WindowInsets.safeGestures,
         ) { padding ->
             CameraContent(
                 permissionGranted = permissionGranted,
                 state = state,
-                onBookScanned = viewModel::fetchBookByIsbn,
-                onBookClick = onBookClick,
+                onBookScanned = controller::searchBook,
+                onBookClick = controller::onBookClick,
                 modifier = Modifier.padding(padding),
             )
         }

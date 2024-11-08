@@ -53,7 +53,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.group3.architectcoders.R
 import com.group3.architectcoders.data.Book
 import com.group3.architectcoders.ui.common.CustomAsyncImage
@@ -61,13 +60,8 @@ import com.group3.architectcoders.ui.screens.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
-    onBookClick: (Book) -> Unit,
-    onCamClick: () -> Unit,
-    onBookmarked: (Book) -> Unit,
-    viewModel: HomeViewModel = viewModel(),
-) {
-    val state = viewModel.state
+fun HomeScreen(controller: HomeController) {
+    val state = controller.viewModel.state
 
     Screen {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -78,10 +72,10 @@ fun HomeScreen(
         ) { padding ->
             HomeContent(
                 state = state,
-                onBookClick = onBookClick,
-                onBookmarked = onBookmarked,
-                onCamClick = onCamClick,
-                onSearch = viewModel::fetchBooksBySearch,
+                onBookClick = controller::onBookClick,
+                onBookmarked = controller::onBookMarked,
+                onCamClick = controller::onCamClick,
+                onSearch = controller::onSearch,
                 contentPadding = padding,
             )
         }
