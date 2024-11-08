@@ -19,10 +19,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BookmarkAdded
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.BookmarkAdd
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -54,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.group3.architectcoders.R
 import com.group3.architectcoders.data.Book
+import com.group3.architectcoders.ui.common.BookmarIcon
 import com.group3.architectcoders.ui.common.CustomAsyncImage
 import com.group3.architectcoders.ui.screens.Screen
 
@@ -227,10 +226,7 @@ private fun BookItem(
                         onBookmarked(book)
                     },
                 ) {
-                    Icon(
-                        imageVector = if (bookSaved) Icons.Filled.BookmarkAdded else Icons.Outlined.BookmarkAdd,
-                        contentDescription = stringResource(id = R.string.bookmark),
-                    )
+                    BookmarIcon(bookSaved)
                 }
             }
         }

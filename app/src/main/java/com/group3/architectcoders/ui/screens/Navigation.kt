@@ -1,10 +1,7 @@
 package com.group3.architectcoders.ui.screens
 
-import android.os.BaseBundle
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavArgumentBuilder
-import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
