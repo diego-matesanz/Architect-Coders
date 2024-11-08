@@ -40,7 +40,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.group3.architectcoders.R
-import com.group3.architectcoders.data.Book
+import com.group3.architectcoders.data.local.Book
 import com.group3.architectcoders.ui.common.CustomAsyncImage
 import com.group3.architectcoders.ui.common.PermissionRequestEffect
 import com.group3.architectcoders.ui.screens.Screen

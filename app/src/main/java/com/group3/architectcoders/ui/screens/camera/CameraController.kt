@@ -1,6 +1,6 @@
 package com.group3.architectcoders.ui.screens.camera
 
-import com.group3.architectcoders.data.Book
+import com.group3.architectcoders.data.local.Book
 import com.group3.architectcoders.ui.navigation.Navigator
 
 class CameraController(

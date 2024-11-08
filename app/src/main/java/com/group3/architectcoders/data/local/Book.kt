@@ -1,4 +1,4 @@
-package com.group3.architectcoders.data
+package com.group3.architectcoders.data.local
 
 data class Book(
     val id: String,

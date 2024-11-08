@@ -5,16 +5,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.group3.architectcoders.data.Book
+import com.group3.architectcoders.data.local.Book
+import com.group3.architectcoders.data.BooksClient
 import com.group3.architectcoders.data.BooksRepository
+import com.group3.architectcoders.domain.GetBooksBySearchUseCase
 import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(
+    private val getBooksBySearchUseCase: GetBooksBySearchUseCase,
+) : ViewModel() {
 
     var state by mutableStateOf(UiState())
         private set
-
-    private val repository = BooksRepository()
 
     fun fetchBooksBySearch(search: String) {
         viewModelScope.launch {
@@ -22,7 +24,7 @@ class HomeViewModel : ViewModel() {
                 state = UiState(isLoading = true, searchText = search, isError = false)
                 state = UiState(
                     isLoading = false,
-                    books = repository.fetchBooksBySearchText(search),
+                    books = getBooksBySearchUseCase(search),
                 )
             } catch (_: Exception) {
                 state = UiState(isLoading = false, isError = true)

@@ -5,22 +5,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.group3.architectcoders.data.Book
+import com.group3.architectcoders.data.local.Book
+import com.group3.architectcoders.data.BooksClient
 import com.group3.architectcoders.data.BooksRepository
+import com.group3.architectcoders.domain.GetBookByIsbnUseCase
 import kotlinx.coroutines.launch
 
-class CameraViewModel : ViewModel() {
+class CameraViewModel(
+    private val getBookByIsbnUseCase: GetBookByIsbnUseCase,
+) : ViewModel() {
 
     var state by mutableStateOf(UiState())
         private set
-
-    private val repository = BooksRepository()
 
     fun fetchBookByIsbn(isbn: String) {
         viewModelScope.launch {
             try {
                 state = state.copy(isLoading = true, isError = false)
-                state = state.copy(isLoading = false, book = repository.fetchBookByIsbn(isbn))
+                state = state.copy(isLoading = false, book = getBookByIsbnUseCase(isbn))
             } catch (_: Exception) {
                 state = state.copy(isLoading = false, isError = true)
             }
