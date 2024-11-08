@@ -3,7 +3,6 @@ package com.group3.architectcoders.ui.screens.detail
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,12 +17,10 @@ import androidx.compose.ui.unit.dp
 import com.group3.architectcoders.ui.common.LoadingSkeleton
 
 @Composable
-fun DetailLoader(padding: PaddingValues) {
+fun DetailLoader(modifier: Modifier = Modifier) {
     Box {
         Column(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
         ) {
             Box {
                 LoadingSkeleton(

@@ -3,12 +3,10 @@ package com.group3.architectcoders.ui.screens.camera
 import android.Manifest
 import android.app.Activity
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
@@ -17,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGestures
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,7 +27,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,14 +35,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
 import com.group3.architectcoders.R
 import com.group3.architectcoders.data.Book
 import com.group3.architectcoders.ui.common.CustomAsyncImage
@@ -54,8 +47,6 @@ import com.group3.architectcoders.ui.common.PermissionRequestEffect
 import com.group3.architectcoders.ui.screens.Screen
 import com.journeyapps.barcodescanner.CaptureManager
 import com.journeyapps.barcodescanner.CompoundBarcodeView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,44 +62,65 @@ fun CameraScreen(
 
     Screen {
         Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text("") },
-                    navigationIcon = {
-                        IconButton(onClick = onBack) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                                contentDescription = stringResource(R.string.go_back),
-                                tint = MaterialTheme.colorScheme.surface,
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
-                )
-            },
+            topBar = { CameraTopBar(onBack = onBack) },
             contentWindowInsets = WindowInsets.safeGestures,
         ) { padding ->
-            if (permissionGranted) {
-                ScanningScreen(
-                    book = state.book,
-                    isLoading = state.isLoading,
-                    isError = state.isError,
-                    onBookScanned = viewModel::fetchBookByIsbn,
-                    onBookClick = onBookClick,
-                    padding = padding,
+            CameraContent(
+                permissionGranted = permissionGranted,
+                state = state,
+                onBookScanned = viewModel::fetchBookByIsbn,
+                onBookClick = onBookClick,
+                modifier = Modifier.padding(padding),
+            )
+        }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun CameraTopBar(onBack: () -> Unit) {
+    TopAppBar(
+        title = { Text("") },
+        navigationIcon = {
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                    contentDescription = stringResource(R.string.go_back),
+                    tint = MaterialTheme.colorScheme.surface,
                 )
-            } else {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Text(
-                        text = stringResource(R.string.need_camera_permission_to_scan),
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
-                }
             }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
+    )
+}
+
+@Composable
+private fun CameraContent(
+    permissionGranted: Boolean,
+    state: CameraViewModel.UiState,
+    onBookScanned: (String) -> Unit,
+    onBookClick: (Book) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    if (permissionGranted) {
+        ScanningScreen(
+            book = state.book,
+            isLoading = state.isLoading,
+            isError = state.isError,
+            onBookScanned = onBookScanned,
+            onBookClick = onBookClick,
+            modifier = modifier,
+        )
+    } else {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Text(
+                text = stringResource(R.string.need_camera_permission_to_scan),
+                style = MaterialTheme.typography.bodyLarge,
+            )
         }
     }
 }
@@ -120,7 +132,7 @@ private fun ScanningScreen(
     isError: Boolean,
     onBookScanned: (String) -> Unit,
     onBookClick: (Book) -> Unit,
-    padding: PaddingValues,
+    modifier: Modifier = Modifier,
 ) {
     var scanFlag by remember { mutableStateOf(false) }
     var showResult by remember { mutableStateOf(false) }
@@ -135,9 +147,7 @@ private fun ScanningScreen(
                     capture.initializeFromIntent(context.intent, null)
                     capture.decode()
                     this.decodeContinuous { result ->
-                        if (scanFlag) {
-                            return@decodeContinuous
-                        }
+                        if (scanFlag) return@decodeContinuous
                         scanFlag = true
                         result.text?.let {
                             lastReadBarcode = result.text
@@ -154,11 +164,11 @@ private fun ScanningScreen(
 
         AnimatedVisibility(
             visible = showResult,
-            modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = Modifier.align(Alignment.BottomCenter),
         ) {
             when {
-                isLoading -> BookResultLoader(modifier = Modifier.padding(padding))
-                isError -> ErrorResult(padding)
+                isLoading -> BookResultLoader(modifier = modifier)
+                isError -> BookResultError(modifier = modifier)
                 else -> {
                     book?.let {
                         BookResult(
@@ -167,7 +177,7 @@ private fun ScanningScreen(
                                 showResult = false
                                 onBookClick(book)
                             },
-                            padding = padding,
+                            modifier = modifier,
                         )
                     }
                 }
@@ -177,53 +187,17 @@ private fun ScanningScreen(
 }
 
 @Composable
-private fun ErrorResult(
-    padding: PaddingValues,
-) {
-    Surface(
-        modifier = Modifier
-            .padding(
-                horizontal = 16.dp,
-                vertical = 32.dp,
-            )
-            .padding(padding)
-            .fillMaxWidth()
-            .clip(MaterialTheme.shapes.small),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Image(
-                modifier = Modifier.size(90.dp),
-                painter = painterResource(R.drawable.ic_error),
-                contentDescription = null,
-            )
-            Text(
-                text = stringResource(R.string.error_scanning_book),
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center,
-            )
-        }
-    }
-}
-
-@Composable
 private fun BookResult(
     book: Book,
     onBookClick: () -> Unit,
-    padding: PaddingValues,
+    modifier: Modifier = Modifier,
 ) {
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .padding(
                 horizontal = 16.dp,
                 vertical = 32.dp,
             )
-            .padding(padding)
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small)
             .clickable(onClick = onBookClick),
