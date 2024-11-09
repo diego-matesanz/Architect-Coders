@@ -1,4 +1,4 @@
-package com.group3.architectcoders.ui.screens
+package com.group3.architectcoders.ui.screens.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -13,13 +13,14 @@ import com.group3.architectcoders.ui.screens.home.HomeScreen
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
+    val navigationAction: NavigationAction = DefaultNavigationAction(navController)
 
     NavHost(navController = navController, startDestination = "home") {
         composable("home") {
             HomeScreen(
-                onBookClick = { book -> navController.navigate("detail/${book.id}") },
-                onCamClick = { navController.navigate("camera") },
-                onBookmarked = { book -> /* TODO: Save book */ },
+                onBookClick = { book -> navigationAction.onBookClick(book.id) },
+                onCamClick = { navigationAction.onCamClick() },
+                onBookmarked = { book -> navigationAction.onBookmarked(book.id) },
             )
         }
         composable(
@@ -29,18 +30,16 @@ fun Navigation() {
             val bookId = requireNotNull(backStackEntry.arguments?.getString("bookId"))
             DetailScreen(
                 viewModel = viewModel {
-                    com.group3.architectcoders.ui.screens.detail.DetailViewModel(
-                        bookId
-                    )
+                    com.group3.architectcoders.ui.screens.detail.DetailViewModel(bookId)
                 },
                 onBack = { navController.popBackStack() },
-                onBookmarked = { book -> /* TODO: Save book */ },
+                onBookmarked = { book -> navigationAction.onBookmarked(book.id) },
             )
         }
         composable("camera") {
             com.group3.architectcoders.ui.screens.camera.CameraScreen(
                 onBack = { navController.popBackStack() },
-                onBookClick = { book -> navController.navigate("detail/${book.id}") },
+                onBookClick = { book -> navigationAction.onBookClick(book.id) },
             )
         }
     }
