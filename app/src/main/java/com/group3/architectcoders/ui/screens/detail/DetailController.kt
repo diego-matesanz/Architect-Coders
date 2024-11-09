@@ -9,7 +9,9 @@ class DetailController(
 ) : IDetailController {
 
     override fun onBack() = navigator.navigateBack()
-    override fun onBookmarked(book: Book) {}
+    override fun onBookmarked(book: Book) {
+        //
+    }
     override fun onDominantColor(color: Int) = viewModel.onDominantColor(color)
 }
 

@@ -44,6 +44,7 @@ import com.group3.architectcoders.data.local.Book
 import com.group3.architectcoders.ui.common.CustomAsyncImage
 import com.group3.architectcoders.ui.common.PermissionRequestEffect
 import com.group3.architectcoders.ui.screens.Screen
+import com.group3.architectcoders.utils.Constants.BOOK_ASPECT_RATIO
 import com.journeyapps.barcodescanner.CaptureManager
 import com.journeyapps.barcodescanner.CompoundBarcodeView
 
@@ -209,7 +210,7 @@ private fun BookResult(
                 contentDescription = book.title,
                 modifier = Modifier
                     .height(90.dp)
-                    .aspectRatio(1 / 1.5F),
+                    .aspectRatio(BOOK_ASPECT_RATIO),
             )
             Column(
                 modifier = Modifier.weight(1f),

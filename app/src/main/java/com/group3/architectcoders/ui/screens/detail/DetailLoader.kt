@@ -15,6 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.group3.architectcoders.ui.common.LoadingSkeleton
+import com.group3.architectcoders.utils.Constants.BOOK_ASPECT_RATIO
+import com.group3.architectcoders.utils.LoadingConstants.INFO_ITEM_COUNT
+import com.group3.architectcoders.utils.LoadingConstants.LINE_COUNT
 
 @Composable
 fun DetailLoader(modifier: Modifier = Modifier) {
@@ -40,7 +43,7 @@ fun DetailLoader(modifier: Modifier = Modifier) {
                     LoadingSkeleton(
                         modifier = Modifier
                             .height(270.dp)
-                            .aspectRatio(1 / 1.5F)
+                            .aspectRatio(BOOK_ASPECT_RATIO)
                     )
                     TitleSectionLoader()
                     InfoSectionLoader()
@@ -74,7 +77,7 @@ private fun InfoSectionLoader() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
     ) {
-        repeat(3) {
+        repeat(INFO_ITEM_COUNT) {
             InfoItemLoader()
         }
     }
@@ -102,7 +105,7 @@ private fun DescriptionSectionLoader() {
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            repeat(5) {
+            repeat(LINE_COUNT) {
                 LoadingSkeleton(
                     modifier = Modifier
                         .fillMaxWidth()

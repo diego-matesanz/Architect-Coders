@@ -57,6 +57,7 @@ import com.group3.architectcoders.R
 import com.group3.architectcoders.data.local.Book
 import com.group3.architectcoders.ui.common.CustomAsyncImage
 import com.group3.architectcoders.ui.screens.Screen
+import com.group3.architectcoders.utils.Constants.BOOK_ASPECT_RATIO
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -212,7 +213,7 @@ private fun BookItem(
             contentDescription = book.title,
             modifier = Modifier
                 .height(180.dp)
-                .aspectRatio(1 / 1.5F),
+                .aspectRatio(BOOK_ASPECT_RATIO),
         )
         Column(
             modifier = Modifier

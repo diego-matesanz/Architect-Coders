@@ -11,7 +11,9 @@ class HomeController(
     override fun onBookClick(book: Book) = navigator.navigateToDetail(book.id)
     override fun onCamClick() = navigator.navigateToCamera()
     override fun onSearch(search: String) = viewModel.fetchBooksBySearch(search)
-    override fun onBookMarked(book: Book) {}
+    override fun onBookMarked(book: Book) {
+        //
+    }
 }
 
 private interface IHomeController {

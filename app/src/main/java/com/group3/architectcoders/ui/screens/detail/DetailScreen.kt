@@ -48,6 +48,8 @@ import com.group3.architectcoders.data.local.Book
 import com.group3.architectcoders.ui.common.CustomAsyncImage
 import com.group3.architectcoders.ui.common.HtmlText
 import com.group3.architectcoders.ui.screens.Screen
+import com.group3.architectcoders.utils.Constants.BOOK_ASPECT_RATIO
+import com.group3.architectcoders.utils.Constants.PARALLAX_SCROLL_HEIGHT_FACTOR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -176,7 +178,7 @@ private fun BoxScope.ParallaxBackground(
         modifier = Modifier
             .layout { measurable, constraints ->
                 val placeable = measurable.measure(constraints)
-                val height = (scrollState.value / 3F).toInt()
+                val height = (scrollState.value / PARALLAX_SCROLL_HEIGHT_FACTOR).toInt()
                 layout(placeable.width, placeable.height) {
                     placeable.place(0, height)
                 }
@@ -206,7 +208,7 @@ private fun BoxScope.BookInfo(
             contentDescription = book.title,
             modifier = Modifier
                 .height(270.dp)
-                .aspectRatio(1 / 1.5F),
+                .aspectRatio(BOOK_ASPECT_RATIO),
         ) { color ->
             onDominantColor(color)
         }
