@@ -13,7 +13,7 @@ import com.group3.architectcoders.ui.screens.home.HomeScreen
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
-    val navigationAction: NavigationAction = DefaultNavigationAction(navController)
+    val navigationAction = DefaultNavigationAction(navController)
 
     NavHost(navController = navController, startDestination = "home") {
         composable("home") {

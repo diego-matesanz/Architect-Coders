@@ -2,7 +2,10 @@ package com.group3.architectcoders.ui.screens.navigation
 
 import androidx.navigation.NavController
 
-class DefaultNavigationAction(private val navController: NavController) : NavigationAction {
+class DefaultNavigationAction(
+    private val navController: NavController
+) : BookNavigationAction, CameraNavigationAction, BookmarkAction {
+
     override fun onBookClick(bookId: String) {
         navController.navigate("detail/$bookId")
     }
