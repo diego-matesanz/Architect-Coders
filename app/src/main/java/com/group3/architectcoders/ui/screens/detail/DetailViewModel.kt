@@ -6,15 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.group3.architectcoders.data.Book
-import com.group3.architectcoders.data.BooksRepository
+import com.group3.architectcoders.data.IBooksRepository
 import kotlinx.coroutines.launch
 
-class DetailViewModel(private val id: String) : ViewModel() {
+class DetailViewModel(private val id: String, private val repository: IBooksRepository) : ViewModel() {
 
     var state by mutableStateOf(UiState())
         private set
-
-    private val repository = BooksRepository()
 
     init {
         viewModelScope.launch {
