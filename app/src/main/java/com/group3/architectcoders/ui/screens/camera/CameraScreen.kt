@@ -62,7 +62,7 @@ import kotlinx.coroutines.withContext
 fun CameraScreen(
     onBack: () -> Unit,
     onBookClick: (Book) -> Unit,
-    viewModel: CameraViewModel = viewModel(),
+    viewModel: CameraViewModel,
 ) {
     val state = viewModel.state
     var permissionGranted by remember { mutableStateOf(false) }

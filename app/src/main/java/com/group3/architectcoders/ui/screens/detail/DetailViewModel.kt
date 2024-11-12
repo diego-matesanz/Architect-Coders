@@ -9,12 +9,10 @@ import com.group3.architectcoders.data.Book
 import com.group3.architectcoders.data.BooksRepository
 import kotlinx.coroutines.launch
 
-class DetailViewModel(private val id: String) : ViewModel() {
+class DetailViewModel(private val repository: BooksRepository, private val id: String) : ViewModel() {
 
     var state by mutableStateOf(UiState())
         private set
-
-    private val repository = BooksRepository()
 
     init {
         viewModelScope.launch {

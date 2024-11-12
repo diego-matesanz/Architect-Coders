@@ -7,14 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.group3.architectcoders.data.Book
 import com.group3.architectcoders.data.BooksRepository
+import com.group3.architectcoders.data.BooksRepositoryImpl
 import kotlinx.coroutines.launch
 
-class CameraViewModel : ViewModel() {
+class CameraViewModel(private val repository: BooksRepository) : ViewModel() {
 
     var state by mutableStateOf(UiState())
         private set
-
-    private val repository = BooksRepository()
 
     fun fetchBookByIsbn(isbn: String) {
         viewModelScope.launch {

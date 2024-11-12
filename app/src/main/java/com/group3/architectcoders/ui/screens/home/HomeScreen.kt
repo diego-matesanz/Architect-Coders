@@ -56,6 +56,7 @@ import com.group3.architectcoders.R
 import com.group3.architectcoders.data.Book
 import com.group3.architectcoders.ui.common.CustomAsyncImage
 import com.group3.architectcoders.ui.screens.Screen
+import com.group3.architectcoders.ui.screens.common.BookmarkIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +64,7 @@ fun HomeScreen(
     onBookClick: (Book) -> Unit,
     onCamClick: () -> Unit,
     onBookmarked: (Book) -> Unit,
-    viewModel: HomeViewModel = viewModel(),
+    viewModel: HomeViewModel,
 ) {
     val state = viewModel.state
 
@@ -227,10 +228,7 @@ private fun BookItem(
                         onBookmarked(book)
                     },
                 ) {
-                    Icon(
-                        imageVector = if (bookSaved) Icons.Filled.BookmarkAdded else Icons.Outlined.BookmarkAdd,
-                        contentDescription = stringResource(id = R.string.bookmark),
-                    )
+                    BookmarkIcon(bookSaved)
                 }
             }
         }
