@@ -3,24 +3,23 @@ package com.group3.architectcoders.data
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toUpperCase
 
-class BooksRepository {
+
+
+class BooksRepository (private val bookService: BooksService) {
 
     suspend fun fetchBooksBySearchText(search: String): List<Book> =
-        BooksClient
-            .instance
+        bookService
             .fetchBooksBySearchText(search)
             .items
             .map { it.toDomainModel() }
 
     suspend fun fetchBookById(id: String): Book =
-        BooksClient
-            .instance
+       bookService
             .fetchBookById(id)
             .toDomainModel()
 
     suspend fun fetchBookByIsbn(isbn: String): Book =
-        BooksClient
-            .instance
+        bookService
             .fetchBooksBySearchText("isbn:$isbn")
             .items
             .first()

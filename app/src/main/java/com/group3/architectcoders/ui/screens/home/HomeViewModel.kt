@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.group3.architectcoders.data.Book
+import com.group3.architectcoders.data.BooksClient
 import com.group3.architectcoders.data.BooksRepository
 import kotlinx.coroutines.launch
 
@@ -14,7 +15,7 @@ class HomeViewModel : ViewModel() {
     var state by mutableStateOf(UiState())
         private set
 
-    private val repository = BooksRepository()
+    private val repository = BooksRepository(BooksClient.instance)
 
     fun fetchBooksBySearch(search: String) {
         viewModelScope.launch {
