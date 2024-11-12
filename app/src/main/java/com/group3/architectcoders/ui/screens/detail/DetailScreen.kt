@@ -29,7 +29,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -59,23 +58,7 @@ fun DetailScreen(
 
     Screen {
         Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {},
-                    navigationIcon = {
-                        IconButton(onClick = onBack) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                                contentDescription = stringResource(id = R.string.go_back),
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = if (state.dominantColor != 0) Color(state.dominantColor) else Color.Transparent,
-                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    )
-                )
-            }
+            topBar = { DetailTopBar(state, onBack) }
         ) { padding ->
             if (state.isLoading) {
                 DetailLoader(padding = padding)
@@ -111,6 +94,29 @@ fun DetailScreen(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DetailTopBar(
+    state: DetailViewModel.UiState,
+    onBack: () -> Unit
+) {
+    TopAppBar(
+        title = {},
+        navigationIcon = {
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                    contentDescription = stringResource(id = R.string.go_back),
+                )
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = if (state.dominantColor != 0) Color(state.dominantColor) else Color.Transparent,
+            navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        )
+    )
 }
 
 @Composable
