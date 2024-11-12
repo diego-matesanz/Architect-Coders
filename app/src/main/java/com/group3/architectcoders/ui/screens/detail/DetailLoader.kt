@@ -3,7 +3,6 @@ package com.group3.architectcoders.ui.screens.detail
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,14 +15,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.group3.architectcoders.ui.common.LoadingSkeleton
+import com.group3.architectcoders.utils.Constants.BOOK_ASPECT_RATIO
+import com.group3.architectcoders.utils.LoadingConstants.INFO_ITEM_COUNT
+import com.group3.architectcoders.utils.LoadingConstants.LINE_COUNT
 
 @Composable
-fun DetailLoader(padding: PaddingValues) {
+fun DetailLoader(modifier: Modifier = Modifier) {
     Box {
         Column(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
         ) {
             Box {
                 LoadingSkeleton(
@@ -43,7 +43,7 @@ fun DetailLoader(padding: PaddingValues) {
                     LoadingSkeleton(
                         modifier = Modifier
                             .height(270.dp)
-                            .aspectRatio(1 / 1.5F)
+                            .aspectRatio(BOOK_ASPECT_RATIO)
                     )
                     TitleSectionLoader()
                     InfoSectionLoader()
@@ -77,7 +77,7 @@ private fun InfoSectionLoader() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
     ) {
-        repeat(3) {
+        repeat(INFO_ITEM_COUNT) {
             InfoItemLoader()
         }
     }
@@ -105,7 +105,7 @@ private fun DescriptionSectionLoader() {
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            repeat(5) {
+            repeat(LINE_COUNT) {
                 LoadingSkeleton(
                     modifier = Modifier
                         .fillMaxWidth()

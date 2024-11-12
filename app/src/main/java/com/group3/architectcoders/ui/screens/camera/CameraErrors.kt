@@ -1,25 +1,26 @@
 package com.group3.architectcoders.ui.screens.camera
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.group3.architectcoders.ui.common.LoadingSkeleton
-import com.group3.architectcoders.utils.Constants.BOOK_ASPECT_RATIO
+import com.group3.architectcoders.R
 
 @Composable
-fun BookResultLoader(modifier: Modifier = Modifier) {
+fun BookResultError(modifier: Modifier = Modifier) {
     Surface(
         modifier = modifier
             .padding(
@@ -36,18 +37,16 @@ fun BookResultLoader(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            LoadingSkeleton(
-                modifier = Modifier
-                    .height(90.dp)
-                    .aspectRatio(BOOK_ASPECT_RATIO),
+            Image(
+                modifier = Modifier.size(90.dp),
+                painter = painterResource(R.drawable.ic_error),
+                contentDescription = null,
             )
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                LoadingSkeleton(modifier = Modifier.size(width = 120.dp, height = 28.dp))
-                LoadingSkeleton(modifier = Modifier.size(width = 80.dp, height = 20.dp))
-            }
+            Text(
+                text = stringResource(R.string.error_scanning_book),
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center,
+            )
         }
     }
 }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
@@ -33,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,72 +53,91 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.group3.architectcoders.R
-import com.group3.architectcoders.data.Book
+import com.group3.architectcoders.data.local.Book
 import com.group3.architectcoders.ui.common.CustomAsyncImage
 import com.group3.architectcoders.ui.screens.Screen
+import com.group3.architectcoders.utils.Constants.BOOK_ASPECT_RATIO
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
-    onBookClick: (Book) -> Unit,
-    onCamClick: () -> Unit,
-    onBookmarked: (Book) -> Unit,
-    viewModel: HomeViewModel = viewModel(),
-) {
-    val state = viewModel.state
+fun HomeScreen(controller: HomeController) {
+    val state = controller.viewModel.state
 
     Screen {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = stringResource(id = R.string.app_name),
-                            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Normal),
-                        )
-                    },
-                    scrollBehavior = scrollBehavior,
-                )
-            },
+            topBar = { HomeTopBar(scrollBehavior = scrollBehavior) },
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             contentWindowInsets = WindowInsets.safeDrawing
         ) { padding ->
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp),
+            HomeContent(
+                state = state,
+                onBookClick = controller::onBookClick,
+                onBookmarked = controller::onBookMarked,
+                onCamClick = controller::onCamClick,
+                onSearch = controller::onSearch,
                 contentPadding = padding,
-            ) {
-                item {
-                    SearchBar(
-                        searchText = state.searchText,
-                        onCamClick = onCamClick,
-                        onSearch = viewModel::fetchBooksBySearch,
+            )
+        }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun HomeTopBar(scrollBehavior: TopAppBarScrollBehavior) {
+    TopAppBar(
+        title = {
+            Text(
+                text = stringResource(id = R.string.app_name),
+                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Normal),
+            )
+        },
+        scrollBehavior = scrollBehavior,
+    )
+}
+
+@Composable
+private fun HomeContent(
+    state: HomeViewModel.UiState,
+    onBookClick: (Book) -> Unit,
+    onBookmarked: (Book) -> Unit,
+    onCamClick: () -> Unit,
+    onSearch: (String) -> Unit,
+    contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+        contentPadding = contentPadding,
+    ) {
+        item {
+            SearchBar(
+                searchText = state.searchText,
+                onCamClick = onCamClick,
+                onSearch = onSearch,
+            )
+        }
+        when {
+            state.isLoading -> item { HomeLoader() }
+            state.isError -> item { HomeError() }
+            state.books.isEmpty() && state.searchText.isEmpty() -> item { HomeEmpty() }
+            else -> {
+                itemsIndexed(state.books) { index, book ->
+                    BookItem(
+                        book = book,
+                        onClick = onBookClick,
+                        onBookmarked = onBookmarked
                     )
-                }
-                when {
-                    state.isLoading -> item { HomeLoader() }
-                    state.isError -> item { HomeError() }
-                    state.books.isEmpty() && state.searchText.isEmpty() -> item { HomeEmpty() }
-                    else -> {
-                        itemsIndexed(state.books) { index, book ->
-                            BookItem(
-                                book = book,
-                                onClick = onBookClick,
-                                onBookmarked = onBookmarked
-                            )
-                            if (index < state.books.lastIndex) {
-                                HorizontalDivider(
-                                    modifier = Modifier
-                                        .padding(top = 24.dp)
-                                        .padding(horizontal = 16.dp),
-                                )
-                            }
-                        }
+                    if (index < state.books.lastIndex) {
+                        HorizontalDivider(
+                            modifier = Modifier
+                                .padding(top = 24.dp)
+                                .padding(horizontal = 16.dp),
+                        )
                     }
                 }
             }
@@ -192,7 +213,7 @@ private fun BookItem(
             contentDescription = book.title,
             modifier = Modifier
                 .height(180.dp)
-                .aspectRatio(1 / 1.5F),
+                .aspectRatio(BOOK_ASPECT_RATIO),
         )
         Column(
             modifier = Modifier
@@ -238,31 +259,6 @@ private fun BookItem(
 }
 
 @Composable
-private fun RatingSection(
-    averageRating: Double,
-    ratingsCount: Int,
-) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-    ) {
-        if (averageRating > 0) {
-            Text(
-                text = "${stringResource(R.string.rating)}: $averageRating",
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Start,
-            )
-        }
-        if (ratingsCount > 0) {
-            Text(
-                text = "$ratingsCount ${stringResource(R.string.ratings)}",
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Start,
-            )
-        }
-    }
-}
-
-@Composable
 private fun TitleAndAuthorsSection(
     title: String,
     authors: List<String>,
@@ -292,5 +288,30 @@ private fun TitleAndAuthorsSection(
             overflow = TextOverflow.Ellipsis,
             textAlign = TextAlign.Start,
         )
+    }
+}
+
+@Composable
+private fun RatingSection(
+    averageRating: Double,
+    ratingsCount: Int,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        if (averageRating > 0) {
+            Text(
+                text = "${stringResource(R.string.rating)}: $averageRating",
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Start,
+            )
+        }
+        if (ratingsCount > 0) {
+            Text(
+                text = "$ratingsCount ${stringResource(R.string.ratings)}",
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Start,
+            )
+        }
     }
 }

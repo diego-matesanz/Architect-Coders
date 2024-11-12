@@ -1,6 +1,7 @@
 package com.group3.architectcoders.data
 
-import com.group3.architectcoders.data.RemoteResult.RemoteBook
+import com.group3.architectcoders.data.remote.RemoteResult
+import com.group3.architectcoders.data.remote.RemoteResult.RemoteBook
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
