@@ -2,7 +2,6 @@ package com.group3.architectcoders.data
 
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toUpperCase
-import com.group3.architectcoders.data.RemoteResult.RemoteBook
 
 class BooksRepository {
 
