@@ -16,8 +16,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.BookmarkAdded
-import androidx.compose.material.icons.outlined.BookmarkAdd
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -29,7 +27,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -44,11 +41,11 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.group3.architectcoders.R
 import com.group3.architectcoders.data.Book
+import com.group3.architectcoders.ui.common.BookmarIcon
 import com.group3.architectcoders.ui.common.CustomAsyncImage
 import com.group3.architectcoders.ui.common.HtmlText
 import com.group3.architectcoders.ui.screens.Screen
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
     viewModel: DetailViewModel,
@@ -60,21 +57,7 @@ fun DetailScreen(
     Screen {
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = {},
-                    navigationIcon = {
-                        IconButton(onClick = onBack) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                                contentDescription = stringResource(id = R.string.go_back),
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = if (state.dominantColor != 0) Color(state.dominantColor) else Color.Transparent,
-                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    )
-                )
+                DetailTopAppBar(onBack = onBack, dominantColor = state.dominantColor)
             }
         ) { padding ->
             if (state.isLoading) {
@@ -101,10 +84,7 @@ fun DetailScreen(
                                 .align(Alignment.BottomEnd)
                                 .padding(32.dp),
                         ) {
-                            Icon(
-                                imageVector = if (bookSaved) Icons.Filled.BookmarkAdded else Icons.Outlined.BookmarkAdd,
-                                contentDescription = stringResource(id = R.string.bookmark),
-                            )
+                            BookmarIcon(bookSaved)
                         }
                     }
                 }
@@ -281,4 +261,24 @@ private fun DescriptionSection(description: String) {
                 .clickable { isExpanded = !isExpanded }
         )
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun DetailTopAppBar(onBack: () -> Unit, dominantColor: Int) {
+    TopAppBar(
+        title = {},
+        navigationIcon = {
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                    contentDescription = stringResource(id = R.string.go_back),
+                )
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = if (dominantColor != 0) Color(dominantColor) else Color.Transparent,
+            navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        )
+    )
 }
